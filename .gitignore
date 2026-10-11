@@ -1,0 +1,36 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Private source material and generated data
+/data/raw/
+/data/interim/
+/data/processed/
+/data/private/
+
+# Model outputs, checkpoints, and caches
+outputs/
+checkpoints/
+adapter/
+models/
+.cache/
+huggingface/
+*.safetensors
+*.gguf
+*.bin
+*.pt
+*.pth
+
+# OS/editor files
+.DS_Store
+.idea/
+.vscode/

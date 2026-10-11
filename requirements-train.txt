@@ -1,0 +1,3 @@
+# Install in a fresh supported Linux/WSL GPU environment.
+# Unsloth selects its compatible PyTorch/Transformers/TRL stack for the platform.
+unsloth

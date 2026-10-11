@@ -8,6 +8,7 @@ This scaffold follows the attached POC guide: Python 3.10–3.12, 4-bit QLoRA, s
 
 - `skills/finetune/SKILL.md` — agent workflow to validate, configure, run, evaluate, and save a fine-tune.
 - `.skills/distill-dataset/SKILL.md` — agent workflow to extract documents, generate grounded examples with a larger teacher model, and review the result.
+- `scripts/generate_seed_dataset.py` — emit a curated, cited starter SFT dataset grounded in the reference corpus (100 train + 12 held-out validation examples).
 - `scripts/prepare_documents.py` — extract text from Markdown, TXT, PDF, or DOCX and write traceable chunks.
 - `scripts/distill_dataset.py` — call an OpenAI-compatible teacher endpoint and save ChatML JSONL with provenance.
 - `scripts/validate_dataset.py` — check supported JSONL formats, role sequences, missing values, and duplicates.
@@ -20,15 +21,24 @@ The draft guide itself is not copied into the repository. Add your domain docume
 
 Use Linux or WSL2, Python 3.10–3.12, a working NVIDIA driver/CUDA stack for training, and enough disk for model weights and checkpoints. For an RTX 3060 Ti (8 GB), start with batch size 1, sequence length 512–1024, LoRA rank 8–16, and gradient accumulation 8. 7B QLoRA is possible but may OOM depending on context length, model implementation, and other GPU processes.
 
+This repository uses [`uv`](https://docs.astral.sh/uv/) to manage the `.venv`. Create the
+environment with a supported interpreter and install into it with `uv pip`:
+
 ```bash
-python3 -m venv .venv
+# from the repository root; pins a 3.12 interpreter regardless of the system python
+uv venv --python 3.12
 source .venv/bin/activate
-python -m pip install --upgrade pip
-# Unsloth selects/patches the compatible training stack for the platform:
-pip install unsloth
+# Unsloth selects/patches the compatible PyTorch/Transformers/TRL stack for the platform:
+uv pip install --python .venv/bin/python unsloth
 # Needed only for document distillation and its CLI:
-pip install -r requirements-distill.txt
+uv pip install --python .venv/bin/python -r requirements-distill.txt
 ```
+
+`uv venv` without `--python` picks up whatever interpreter `uv` finds first, which may be
+outside the supported 3.10–3.12 window (the system python here is 3.14), so always pass
+`--python 3.12`. Add new dependencies with
+`uv pip install --python .venv/bin/python <package>` rather than bare `pip`, so they land
+in `.venv`.
 
 Check the training device before downloading a base model:
 

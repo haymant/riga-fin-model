@@ -34,3 +34,6 @@ huggingface/
 .DS_Store
 .idea/
 .vscode/
+refs
+
+unsloth_compiled_cache
